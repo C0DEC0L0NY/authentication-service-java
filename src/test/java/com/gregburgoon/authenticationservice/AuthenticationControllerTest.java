@@ -2,13 +2,18 @@ package com.gregburgoon.authenticationservice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gregburgoon.authenticationservice.dto.RegistrationDTO;
+import com.gregburgoon.authenticationservice.repository.AuthenticationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -20,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@TestPropertySource(locations="classpath:test.properties")
 class AuthenticationControllerTest {
     @Autowired
     private MockMvc mvc;

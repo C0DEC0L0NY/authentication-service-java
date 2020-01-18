@@ -1,9 +1,12 @@
 package com.gregburgoon.authenticationservice;
 
-    import com.gregburgoon.authenticationservice.dto.RegistrationDTO;
+import com.gregburgoon.authenticationservice.dto.RegistrationDTO;
+import com.gregburgoon.authenticationservice.entity.User;
+import com.gregburgoon.authenticationservice.exception.EmailExistsException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.*;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,20 +16,24 @@ import java.util.Map;
 
 @RestController("/auth")
 public class AuthenticationController {
+    @Autowired
+    AuthenticationService service;
+
     @RequestMapping(value = "/auth/register", method = RequestMethod.POST)
     public ResponseEntity register(@Valid @RequestBody RegistrationDTO registrationDTO) {
-        //Check no one else is registered
-        //            if () {
-        //
-        //            }
-                //Create a new user account
-//            Credentials credentials = createUserAccount(accountDto, result);
-        return ResponseEntity.ok("User is valid");
+        User registeredUser;
+        try {
+            registeredUser = service.registerNewUserAccount(registrationDTO);
+            return ResponseEntity.ok("User email: "+ registeredUser.getEmail()+" is valid, and the user has been created");
+        } catch (EmailExistsException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("User Email Already Exists");
+        }
     }
 
     @RequestMapping(value = "/auth/getAuthToken", method = RequestMethod.POST)
-    public String authenticate() {
-        return "Auth Token Gradle!";
+    public ResponseEntity authenticate() {
+        return ResponseEntity.ok("Auth Token Gradle!");
     }
 
     @RequestMapping(value = "/auth/logout", method = RequestMethod.POST)

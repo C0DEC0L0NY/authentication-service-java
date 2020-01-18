@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController("/user")
-public class UserController {
+public class ProfileController {
     @RequestMapping(value = "/user/id", method = RequestMethod.GET)
     public String getUserId() {
         return "User Id";
