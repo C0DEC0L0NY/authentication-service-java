@@ -67,11 +67,10 @@ public class AuthenticationService implements IAuthenticationService {
                 }
                 JwtGenerator<CommonProfile> jwtGenerator = new JwtGenerator();
 
-                //TODO: Figure out how to do the encryption and signature here correctly
-//                SecretSignatureConfiguration secretSignatureConfiguration = new SecretSignatureConfiguration(salt);
-//                SecretEncryptionConfiguration secretEncryptionConfiguration = new SecretEncryptionConfiguration(salt);
-//                jwtGenerator.setSignatureConfiguration(secretSignatureConfiguration);
-//                jwtGenerator.setEncryptionConfiguration(secretEncryptionConfiguration);
+                SecretSignatureConfiguration secretSignatureConfiguration = new SecretSignatureConfiguration(salt);
+                SecretEncryptionConfiguration secretEncryptionConfiguration = new SecretEncryptionConfiguration(salt);
+                jwtGenerator.setSignatureConfiguration(secretSignatureConfiguration);
+                jwtGenerator.setEncryptionConfiguration(secretEncryptionConfiguration);
                 return jwtGenerator.generate(profile);
             }
         }
