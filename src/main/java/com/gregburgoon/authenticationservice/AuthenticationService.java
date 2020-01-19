@@ -1,33 +1,37 @@
 package com.gregburgoon.authenticationservice;
 
-import com.gregburgoon.authenticationservice.dto.UserDTO;
+import com.gregburgoon.authenticationservice.dto.RegistrationDTO;
 import com.gregburgoon.authenticationservice.entity.Role;
+import com.gregburgoon.authenticationservice.entity.User;
 import com.gregburgoon.authenticationservice.exception.EmailExistsException;
 import com.gregburgoon.authenticationservice.exception.InvalidCredentials;
 import com.gregburgoon.authenticationservice.repository.AuthenticationRepository;
-import com.gregburgoon.authenticationservice.dto.RegistrationDTO;
-import com.gregburgoon.authenticationservice.entity.User;
 import com.gregburgoon.authenticationservice.repository.RoleRepository;
-import com.gregburgoon.authenticationservice.util.JwtUtils;
+import org.pac4j.core.profile.CommonProfile;
+import org.pac4j.jwt.config.encryption.SecretEncryptionConfiguration;
+import org.pac4j.jwt.config.signature.SecretSignatureConfiguration;
+import org.pac4j.jwt.profile.JwtGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Optional;
 
 @Service
 public class AuthenticationService implements IAuthenticationService {
+
+    @Value("${salt}")
+    private String salt;
 
     @Autowired
     AuthenticationRepository authenticationRepository;
 
     @Autowired
     RoleRepository roleRepository;
-
-    @Autowired
-    JwtUtils jwtUtils;
 
     @Override
     public User registerNewUserAccount(RegistrationDTO registrationDTO) throws EmailExistsException {
@@ -51,21 +55,27 @@ public class AuthenticationService implements IAuthenticationService {
 
     @Override
     public String getAuthToken(String email, String password) throws InvalidCredentials {
-        Optional<User> optionalUser = authenticationRepository.login(email,passwordEncoder().encode(password));
+        Optional<User> optionalUser = authenticationRepository.findUserByEmail(email);
         if(optionalUser.isPresent()){
             User user = optionalUser.get();
-            UserDTO dto = new UserDTO();
-            dto.setUserId(user.getId());
-            dto.setEmail(user.getEmail());
-            List<String> roles = new ArrayList<String>();
-            roles.add("ROLE1");
-            roles.add("ROLE2");
-            dto.setRoles(roles);
-            String token = jwtUtils.generateToken(dto);
-            return token;
-        } else {
-            throw new InvalidCredentials();
+
+            if (passwordEncoder().matches(password, user.getPassword())) {
+                CommonProfile profile = new CommonProfile();
+                profile.setId(user.getId().toString());
+                for (Role role : user.getRoles()) {
+                    profile.addRole(role.getName());
+                }
+                JwtGenerator<CommonProfile> jwtGenerator = new JwtGenerator();
+
+                //TODO: Figure out how to do the encryption and signature here correctly
+//                SecretSignatureConfiguration secretSignatureConfiguration = new SecretSignatureConfiguration(salt);
+//                SecretEncryptionConfiguration secretEncryptionConfiguration = new SecretEncryptionConfiguration(salt);
+//                jwtGenerator.setSignatureConfiguration(secretSignatureConfiguration);
+//                jwtGenerator.setEncryptionConfiguration(secretEncryptionConfiguration);
+                return jwtGenerator.generate(profile);
+            }
         }
+        throw new InvalidCredentials();
     }
 
     @Bean

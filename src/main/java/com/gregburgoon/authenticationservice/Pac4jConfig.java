@@ -18,11 +18,12 @@ public class Pac4jConfig {
 
     @Bean
     public Config config() {
-        SecretSignatureConfiguration secretSignatureConfiguration = new SecretSignatureConfiguration(salt);
-        SecretEncryptionConfiguration secretEncryptionConfiguration = new SecretEncryptionConfiguration(salt);
+        //TODO: Figure out how to do the encryption and signature here correctly
+//        SecretSignatureConfiguration secretSignatureConfiguration = new SecretSignatureConfiguration(salt);
+//        SecretEncryptionConfiguration secretEncryptionConfiguration = new SecretEncryptionConfiguration(salt);
         JwtAuthenticator authenticator = new JwtAuthenticator();
-        authenticator.setSignatureConfiguration(secretSignatureConfiguration);
-        authenticator.setEncryptionConfiguration(secretEncryptionConfiguration);
+//        authenticator.setSignatureConfiguration(secretSignatureConfiguration);
+//        authenticator.setEncryptionConfiguration(secretEncryptionConfiguration);
         HeaderClient jwtClient = new HeaderClient("Authorization", "Bearer", authenticator);
         Clients clients = new Clients(jwtClient);
         Config config = new Config(clients);

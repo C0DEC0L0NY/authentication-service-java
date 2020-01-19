@@ -36,7 +36,7 @@ class AuthenticationControllerTest {
     @BeforeEach
     void setUp() {
         registrationDTOBuilder = RegistrationDTO
-                .builder()
+                .buildRegistrationDTO()
                 .email("test@test.com")
                 .firstName("Greg")
                 .lastName("Burgoon")

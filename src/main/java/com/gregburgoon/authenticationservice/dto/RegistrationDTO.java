@@ -1,6 +1,7 @@
 package com.gregburgoon.authenticationservice.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.gregburgoon.authenticationservice.constraint.ValidRegistration;
 import com.gregburgoon.authenticationservice.constraint.group.PrimaryValidations;
 import com.gregburgoon.authenticationservice.constraint.group.SecondaryValidations;
 import com.gregburgoon.authenticationservice.constraint.ValidPassword;
@@ -12,9 +13,17 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 @GroupSequence({PrimaryValidations.class, SecondaryValidations.class, RegistrationDTO.class})
-@ValidPassword(groups = SecondaryValidations.class)
-@Builder(toBuilder = true)
-public class RegistrationDTO {
+@ValidRegistration(groups = SecondaryValidations.class)
+public class RegistrationDTO extends CredentialsDTO {
+
+    @Builder(builderMethodName = "buildRegistrationDTO")
+    public RegistrationDTO(String password, String email, String firstName, String lastName, String matchingPassword) {
+        super(password, email);
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.matchingPassword = matchingPassword;
+    }
+
     @NotBlank(message = "Must have a First Name", groups = PrimaryValidations.class)
     @Getter
     @JsonProperty("firstname")
@@ -25,21 +34,8 @@ public class RegistrationDTO {
     @JsonProperty("lastname")
     private String lastName;
 
-    @NotBlank(message = "Must have a Password", groups = PrimaryValidations.class)
-    @Getter
-    @JsonProperty("password")
-    private String password;
-
     @NotBlank(message = "Must have a Matching Password", groups = PrimaryValidations.class)
     @Getter
     @JsonProperty("matchingPassword")
     private String matchingPassword;
-
-    @NotBlank(message = "Must have an Email", groups = PrimaryValidations.class)
-    @Getter
-    @Pattern(regexp = "^[_A-Za-z0-9-+]+(.[_A-Za-z0-9-]+)*@" +
-            "[A-Za-z0-9-]+(.[A-Za-z0-9]+)*(.[A-Za-z]{2,})$",
-            message = "Invalid Email", groups = SecondaryValidations.class)
-    @JsonProperty("email")
-    private String email;
 }

@@ -1,8 +1,10 @@
 package com.gregburgoon.authenticationservice;
 
+import com.gregburgoon.authenticationservice.dto.CredentialsDTO;
 import com.gregburgoon.authenticationservice.dto.RegistrationDTO;
 import com.gregburgoon.authenticationservice.entity.User;
 import com.gregburgoon.authenticationservice.exception.EmailExistsException;
+import com.gregburgoon.authenticationservice.exception.InvalidCredentials;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,13 +34,20 @@ public class AuthenticationController {
     }
 
     @RequestMapping(value = "/auth/getAuthToken", method = RequestMethod.POST)
-    public ResponseEntity authenticate() {
-        return ResponseEntity.ok("Auth Token Gradle!");
+    public ResponseEntity getAuthToken(@Valid @RequestBody CredentialsDTO credentialsDTO) {
+        String token;
+        try {
+            token = service.getAuthToken(credentialsDTO.getEmail(), credentialsDTO.getPassword());
+            return ResponseEntity.ok("Auth Token Created: "+token);
+        } catch (InvalidCredentials e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Invalid Credentials");
+        }
     }
 
     @RequestMapping(value = "/auth/logout", method = RequestMethod.POST)
-    public String logout() {
-        return "Logout Gradle!";
+    public ResponseEntity logout() {
+        return ResponseEntity.ok("Logout Gradle!");
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
