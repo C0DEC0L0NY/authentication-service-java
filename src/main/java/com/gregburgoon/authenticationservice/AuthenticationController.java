@@ -1,8 +1,8 @@
 package com.gregburgoon.authenticationservice;
 
 import com.gregburgoon.authenticationservice.dto.CredentialsDTO;
+import com.gregburgoon.authenticationservice.dto.RegisteredDTO;
 import com.gregburgoon.authenticationservice.dto.RegistrationDTO;
-import com.gregburgoon.authenticationservice.entity.User;
 import com.gregburgoon.authenticationservice.exception.EmailExistsException;
 import com.gregburgoon.authenticationservice.exception.InvalidCredentials;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +23,10 @@ public class AuthenticationController {
 
     @RequestMapping(value = "/auth/register", method = RequestMethod.POST)
     public ResponseEntity register(@Valid @RequestBody RegistrationDTO registrationDTO) {
-        User registeredUser;
+        RegisteredDTO registeredUser;
         try {
             registeredUser = service.registerNewUserAccount(registrationDTO);
-            return ResponseEntity.ok("User email: "+ registeredUser.getEmail()+" is valid, and the user has been created");
+            return ResponseEntity.ok("User has been created with userId: "+ registeredUser.getUserId());
         } catch (EmailExistsException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("User Email Already Exists");

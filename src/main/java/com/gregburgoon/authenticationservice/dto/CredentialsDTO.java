@@ -17,7 +17,6 @@ import javax.validation.constraints.Pattern;
 public class CredentialsDTO {
     @NotBlank(message = "Must have a Password", groups = PrimaryValidations.class)
     @Getter
-    @JsonProperty("password")
     private String password;
 
     @NotBlank(message = "Must have an Email", groups = PrimaryValidations.class)
@@ -25,6 +24,5 @@ public class CredentialsDTO {
     @Pattern(regexp = "^[_A-Za-z0-9-+]+(.[_A-Za-z0-9-]+)*@" +
             "[A-Za-z0-9-]+(.[A-Za-z0-9]+)*(.[A-Za-z]{2,})$",
             message = "Invalid Email", groups = SecondaryValidations.class)
-    @JsonProperty("email")
     private String email;
 }

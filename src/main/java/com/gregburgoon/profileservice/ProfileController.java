@@ -1,12 +1,9 @@
-package com.gregburgoon.userservice;
+package com.gregburgoon.profileservice;
 
-import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.springframework.security.authentication.Pac4jAuthentication;
-import org.pac4j.springframework.security.profile.SpringSecurityProfileManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
-
 @RestController("/user")
 public class ProfileController {
+    @Autowired
+    ProfileService service;
 
     @RequestMapping(value = "/user/id", method = RequestMethod.GET)
     public ResponseEntity getUserId() {

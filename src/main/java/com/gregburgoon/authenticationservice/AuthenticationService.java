@@ -1,5 +1,6 @@
 package com.gregburgoon.authenticationservice;
 
+import com.gregburgoon.authenticationservice.dto.RegisteredDTO;
 import com.gregburgoon.authenticationservice.dto.RegistrationDTO;
 import com.gregburgoon.authenticationservice.entity.Role;
 import com.gregburgoon.authenticationservice.entity.User;
@@ -34,7 +35,7 @@ public class AuthenticationService implements IAuthenticationService {
     RoleRepository roleRepository;
 
     @Override
-    public User registerNewUserAccount(RegistrationDTO registrationDTO) throws EmailExistsException {
+    public RegisteredDTO registerNewUserAccount(RegistrationDTO registrationDTO) throws EmailExistsException {
         Optional<User> user = authenticationRepository.findUserByEmail(registrationDTO.getEmail());
         if (!user.isPresent()) {
             User newUser = new User();
@@ -47,7 +48,10 @@ public class AuthenticationService implements IAuthenticationService {
             {
                 newUser.setRoles(Arrays.asList(role.get()));
             }
-            return authenticationRepository.save(newUser);
+            authenticationRepository.save(newUser);
+            RegisteredDTO.RegisteredDTOBuilder builder = RegisteredDTO.builder();
+            builder.userId(newUser.getId());
+            return builder.build();
         } else {
             throw new EmailExistsException();
         }
@@ -78,7 +82,7 @@ public class AuthenticationService implements IAuthenticationService {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    private PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }

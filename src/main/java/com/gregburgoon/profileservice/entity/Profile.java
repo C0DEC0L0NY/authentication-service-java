@@ -1,37 +1,41 @@
-package com.gregburgoon.authenticationservice.entity;
+package com.gregburgoon.profileservice.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
 
-@Entity(name="registered_user")
+@Entity(name="profile")
 @NoArgsConstructor
-@Table(name="registered_user")
-public class User {
+@Table(name="profile")
+public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter @Setter
+    @Getter
+    @Setter
     private Long id;
+
+    @Getter
+    @Setter
+    private Long userId;
 
     @Column(nullable = false, unique = true)
     @Getter @Setter
     private String email;
-
-    @ManyToMany
-    @Getter @Setter
-    private List<Role> roles;
 
     @Getter @Setter
     private String firstName;
     @Getter @Setter
     private String lastName;
     @Getter @Setter
-    private String password;
-
-    @Transient
+    private String photoUrl;
     @Getter @Setter
-    private String passwordConfirmation;
+    private String address;
+    @Getter @Setter
+    private String city;
+    @Getter @Setter
+    private String stateProvince;
+    @Getter @Setter
+    private String country;
 }
