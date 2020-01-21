@@ -10,5 +10,5 @@ import org.springframework.stereotype.Service;
 public interface IProfileService {
     ProfileDTO createNewProfile(ProfileDTO profileDTO) throws ProfileCreationException;
     ProfileDTO getProfileForUser(Long userId) throws ProfileNotFoundException;
-    ProfileDTO updateProfileForUser(ProfileDTO profileDTO) throws ProfileUpdateException;
+    ProfileDTO updateProfileForUser(Long userId, ProfileDTO profileDTO) throws ProfileUpdateException;
 }

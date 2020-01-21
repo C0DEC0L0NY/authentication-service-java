@@ -74,7 +74,16 @@ class ProfileServiceTest {
     @Test
     void testProfileCreationFailure() {
         ProfileDTO creationProfile = profileDTOBuilder.build();
-        Mockito.when(profileRepository.save(any())).thenThrow(new IllegalArgumentException());
+        Mockito.when(profileRepository.save(any())).thenThrow(new RuntimeException());
+        assertThrows(ProfileCreationException.class, () -> {
+            service.createNewProfile(creationProfile);
+        });
+    }
+
+    @Test
+    void testProfileCreationFailureDueToExistingCredentials() {
+        ProfileDTO creationProfile = profileDTOBuilder.build();
+        Mockito.when(profileRepository.checkForPreExistingUsers(any(), any())).thenReturn(Optional.of(new Profile()));
         assertThrows(ProfileCreationException.class, () -> {
             service.createNewProfile(creationProfile);
         });
@@ -97,14 +106,13 @@ class ProfileServiceTest {
         });
     }
 
-
     @Test
     void testUpdateProfileForUserSuccess() {
         profileDTOBuilder.firstName("NewFirstName");
         profileDTOBuilder.lastName("NewLastName");
         ProfileDTO updatedProfile = profileDTOBuilder.build();
         assertDoesNotThrow(()-> {
-            ProfileDTO profileDTO = service.updateProfileForUser(updatedProfile);
+            ProfileDTO profileDTO = service.updateProfileForUser(updatedProfile.getUserId(), updatedProfile);
             assertNotNull(profileDTO);
             Mockito.verify(profileRepository).save(profileArgumentCaptor.capture());
             assertEquals(profileArgumentCaptor.getValue().getFirstName(), "NewFirstName");
@@ -117,8 +125,9 @@ class ProfileServiceTest {
     void testUpdateProfileForUserFailure() {
         profileDTOBuilder.userId(1387410279834719234L);
         profileDTOBuilder.lastName("NewLastName");
+        ProfileDTO profileDTO = profileDTOBuilder.build();
         assertThrows(ProfileUpdateException.class, () -> {
-            service.updateProfileForUser(profileDTOBuilder.build());
+            service.updateProfileForUser(profileDTO.getUserId(), profileDTO);
         });
     }
 }

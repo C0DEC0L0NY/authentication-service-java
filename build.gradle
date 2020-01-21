@@ -44,7 +44,7 @@ dependencies {
 }
 
 application {
-	mainClassName = 'com.gregburgoon.authenticationservice.AuthenticationServiceApplication'
+	mainClassName = 'com.gregburgoon.AuthenticationServiceApplication'
 }
 
 test {

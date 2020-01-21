@@ -5,16 +5,25 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 @Builder
 @EqualsAndHashCode
 public class ProfileDTO {
+    @NotNull(message = "A profile must be tied to a userId")
     @Getter
     private Long userId;
 
+    @NotBlank(message = "A profile must have an email")
     @Getter
     private String email;
+
+    @NotBlank(message = "A profile must have a First Name")
     @Getter
     private String firstName;
+
+    @NotBlank(message = "A profile must have a Last Name")
     @Getter
     private String lastName;
     @Getter

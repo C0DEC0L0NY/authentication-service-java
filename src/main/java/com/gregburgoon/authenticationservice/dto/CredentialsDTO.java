@@ -1,6 +1,5 @@
 package com.gregburgoon.authenticationservice.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gregburgoon.authenticationservice.constraint.ValidPassword;
 import com.gregburgoon.authenticationservice.constraint.group.PrimaryValidations;
 import com.gregburgoon.authenticationservice.constraint.group.SecondaryValidations;
