@@ -21,10 +21,10 @@ repositories {
 }
 
 dependencies {
-	compile 'io.jsonwebtoken:jjwt-jackson:0.10.7'
-	compile 'org.pac4j:spring-security-pac4j:4.1.0'
-	compile 'org.pac4j:pac4j-jwt:3.8.3'
-	compile 'org.pac4j:pac4j-http:3.8.3'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.10.7'
+	implementation 'org.pac4j:spring-security-pac4j:4.1.0'
+	implementation 'org.pac4j:pac4j-jwt:3.8.3'
+	implementation 'org.pac4j:pac4j-http:3.8.3'
 	compileOnly 'org.projectlombok:lombok:1.18.10'
 	annotationProcessor 'org.projectlombok:lombok:1.18.10'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
